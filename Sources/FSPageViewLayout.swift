@@ -30,6 +30,12 @@ class FSPagerViewLayout: UICollectionViewLayout {
     fileprivate var actualInteritemSpacing: CGFloat = 0
     fileprivate var actualItemSize: CGSize = .zero
     
+    override var flipsHorizontallyInOppositeLayoutDirection: Bool {
+        get {
+            return true
+        }
+    }
+    
     override init() {
         super.init()
         self.commonInit()
