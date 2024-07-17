@@ -213,7 +213,16 @@ open class FSPageControl: UIControl {
         self.addSubview(view)
         self.contentView = view
         self.isUserInteractionEnabled = false
-        
+
+        if #available(iOS 9.0, *) {
+            if UIView.appearance().semanticContentAttribute == .forceRightToLeft {
+                self.contentView.transform = CGAffineTransformMakeRotation(.pi)
+            } else {
+                self.contentView.transform = .identity
+            }
+        } else {
+            // Fallback on earlier versions
+        }
     }
     
     fileprivate func setNeedsUpdateIndicators() {
