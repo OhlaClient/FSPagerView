@@ -638,7 +638,7 @@ open class FSPagerView: UIView,UICollectionViewDataSource,UICollectionViewDelega
 
 extension FSPagerView {
     
-    func reloadDataSafe() {
+     public func reloadDataSafe() {
         
         if self.isScrolling {
             
