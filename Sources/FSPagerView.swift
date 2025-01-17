@@ -638,7 +638,7 @@ open class FSPagerView: UIView,UICollectionViewDataSource,UICollectionViewDelega
 
 extension FSPagerView {
     
-     public func reloadDataSafe() {
+    public func reloadDataSafe() {
         
         if self.isScrolling {
             
@@ -651,6 +651,8 @@ extension FSPagerView {
         self.isScrolling = false
         
         if self.shouldReload {
+            
+            self.shouldReload = false
             
             let automaticSlidingInterval = self.automaticSlidingInterval
             self.automaticSlidingInterval = 0
