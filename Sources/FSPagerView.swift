@@ -225,6 +225,9 @@ open class FSPagerView: UIView,UICollectionViewDataSource,UICollectionViewDelega
     internal var numberOfItems: Int = 0
     internal var numberOfSections: Int = 0
     
+    private var isScrolling: Bool = false
+    private var shouldReload: Bool = false
+    
     fileprivate var dequeingSection = 0
     fileprivate var centermostIndexPath: IndexPath {
         guard self.numberOfItems > 0, self.collectionView.contentSize != .zero else {
@@ -391,6 +394,9 @@ open class FSPagerView: UIView,UICollectionViewDataSource,UICollectionViewDelega
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        self.isScrolling = true
+        
         if !self.isPossiblyRotating && self.numberOfItems > 0 {
             // In case someone is using KVO
             let currentIndex = lround(Double(self.scrollOffset)) % self.numberOfItems
@@ -424,13 +430,27 @@ open class FSPagerView: UIView,UICollectionViewDataSource,UICollectionViewDelega
         }
     }
     
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        
+        if decelerate == false {
+            
+            self.scrollEnd()
+        }
+    }
+    
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        
+        self.scrollEnd()
+        
         if let function = self.delegate?.pagerViewDidEndDecelerating {
             function(self)
         }
     }
     
     public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        
+        self.scrollEnd()
+        
         if let function = self.delegate?.pagerViewDidEndScrollAnimation {
             function(self)
         }
@@ -614,6 +634,32 @@ open class FSPagerView: UIView,UICollectionViewDataSource,UICollectionViewDelega
         }
     }
     
+}
+
+extension FSPagerView {
+    
+    func reloadDataSafe() {
+        
+        if self.isScrolling {
+            
+            self.shouldReload = true
+        }
+    }
+    
+    private func scrollEnd() {
+        
+        self.isScrolling = false
+        
+        if self.shouldReload {
+            
+            let automaticSlidingInterval = self.automaticSlidingInterval
+            self.automaticSlidingInterval = 0
+            
+            self.reloadData()
+            
+            self.automaticSlidingInterval = automaticSlidingInterval
+        }
+    }
 }
 
 extension FSPagerView {
