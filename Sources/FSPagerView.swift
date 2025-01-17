@@ -643,6 +643,9 @@ extension FSPagerView {
         if self.isScrolling {
             
             self.shouldReload = true
+        } else {
+            
+            self.reloadData()
         }
     }
     
